@@ -17,3 +17,4 @@ Authorization: Bearer {{access_token}}
 GET http://localhost:9000/api/test/admin
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+#git remote set-url origin https://tuhinal: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@github.com/TuhinAl/hr-management.git
