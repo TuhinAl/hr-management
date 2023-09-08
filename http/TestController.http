@@ -1,0 +1,19 @@
+
+GET http://localhost:9000/api/test/all
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
+GET http://localhost:9000/api/test/user
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
+GET http://localhost:9000/api/test/mod
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+###
+GET http://localhost:9000/api/test/admin
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

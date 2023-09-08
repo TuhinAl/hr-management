@@ -1,0 +1,19 @@
+
+POST http://localhost:9023/api/v1/employee-info
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "id": "",
+  "name": "Alauddin Tuhin",
+  "address": "Dhanmondi, Dhaka-1212",
+  "paymentTypeEnumKey": "PENDING",
+  "paymentTypeEnumValue": "Pending",
+  "designationTypeEnumKey": "EXECUTIVE",
+  "designationTypeEnumValue": "Executive",
+  "employeeAccountDto": null,
+  "employeeAccountTransactionDto": null,
+  "employeeAttendanceDto": null,
+  "employeeBankInfoDto": null,
+  "enabled": true
+}

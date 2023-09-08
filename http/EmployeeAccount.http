@@ -1,0 +1,22 @@
+
+POST http://localhost:9000/api/auth/signup
+Content-Type: application/json
+
+{
+  "id": "",
+  "email": "alauddintuhin1411@gmail.com",
+  "username": "tuhinal",
+  "password": "tuhinn00al",
+  "role": ["user"],
+  "enabled": true
+}
+> {% client.global.set("access_token", response.body.access_token);  %}
+###
+POST http://localhost:9000/api/auth/signin
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "username": "tuhinal",
+  "password": "tuhinn00al"
+}
