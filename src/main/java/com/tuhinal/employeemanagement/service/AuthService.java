@@ -30,7 +30,7 @@ import static com.tuhinal.employeemanagement.util.TransformUtil.copyProp;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeAccountService {
+public class AuthService {
     
     private final EmployeeAccountRepository employeeAccountRepository;
     private final PasswordEncoder passwordEncoder;

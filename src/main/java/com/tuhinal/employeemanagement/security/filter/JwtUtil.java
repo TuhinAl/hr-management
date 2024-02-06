@@ -16,9 +16,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 @Component
+@Deprecated
+/**
+ * Please dont use this class
+ */
 public class JwtUtil{
-    
-    
+
+    public static final String JWT_HEADER = "Authorization";
     public String generateJwtToken(String username) {
         Map<String,Object> claims=new HashMap<>();
         String token = "";

@@ -18,6 +18,10 @@ import java.io.IOException;
 
 @Component
 @AllArgsConstructor
+@Deprecated
+/**
+ * Please dont use this class
+ */
 public class SecurityFilter extends OncePerRequestFilter {
     
     private final JwtUtil jwtUtil;

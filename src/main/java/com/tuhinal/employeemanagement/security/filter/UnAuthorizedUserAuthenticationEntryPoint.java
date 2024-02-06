@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Deprecated
+/**
+ * Please dont use this class
+ */
 @Component
 public class UnAuthorizedUserAuthenticationEntryPoint implements AuthenticationEntryPoint{
     @Override
