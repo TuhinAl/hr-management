@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,13 +26,14 @@ import java.util.*;
 
 @Component
 public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
-    public static final String JWT_HEADER = "Authorization";
-    public static final String  KEY = "Thesearehugenumbersforanewappevenwhentakingintoaccountthatthemorethantwobillionmonthlyactive" +
-            "Instagramuserswerepromotedtoinstallthisnewapp";
 
+    public static final String JWT_HEADER = "Authorization";
+    @Autowired private JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain) throws ServletException, IOException {
 
         String username = request.getParameter("username");
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -41,19 +43,7 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-            SecretKey secretKey = Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
-
-            String token = Jwts
-                    .builder()
-                    .setIssuer("Tuhin")
-                    .setSubject("JWT Token")
-//                    .setSubject(username)
-                    .claim("username", authenticationToken.getName())
-                    .claim("authorities", populateAuthorities(authenticationToken.getAuthorities()))
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date((System.currentTimeMillis() + 60000)))
-                    .signWith(secretKey)
-                    .compact();
+            String token = jwtUtil.generateJwtToken(username, authenticationToken);
             response.addHeader(JWT_HEADER, "Bearer " + token);
         }
         chain.doFilter(request, response);

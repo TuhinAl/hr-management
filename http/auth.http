@@ -1,10 +1,10 @@
 ### employee login
-POST http://116.68.206.158:9009/api/v1/authentication/employee/authenticate
+POST http://localhost:9000/login
 Content-Type: application/json
 
 {
-  "username": "system-admin-0",
-  "password": "123Abc"
+  "username": "tuhinal",
+  "password": "tuhin123"
 }
 
 > {% client.global.set("access_token", response.body.access_token);  %}

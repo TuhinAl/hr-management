@@ -3,25 +3,26 @@ package com.tuhinal.employeemanagement.service;
 
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
-import com.tuhinal.employeemanagement.enums.RoleTypeEnum;
-import com.tuhinal.employeemanagement.security.jwt.UserRequest;
-import com.tuhinal.employeemanagement.security.jwt.UserResponse;
 import com.tuhinal.employeemanagement.entity.Role;
+import com.tuhinal.employeemanagement.enums.RoleTypeEnum;
 import com.tuhinal.employeemanagement.repository.EmployeeInfoRepository;
 import com.tuhinal.employeemanagement.repository.RoleRepository;
+import com.tuhinal.employeemanagement.security.filter.JwtUtil;
+import com.tuhinal.employeemanagement.security.jwt.UserRequest;
+import com.tuhinal.employeemanagement.security.jwt.UserResponse;
 import com.tuhinal.employeemanagement.util.IdGeneratorService;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.tuhinal.employeemanagement.util.TransformUtil.copyProp;
 
@@ -29,20 +30,21 @@ import static com.tuhinal.employeemanagement.util.TransformUtil.copyProp;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    
+
     private final PasswordEncoder passwordEncoder;
     private final IdGeneratorService idGeneratorService;
     private final EmployeeInfoRepository employeeInfoRepository;
     private final RoleRepository roleRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
-    
-    
+
     @Transactional
     public EmployeeInfoDto register(EmployeeInfoDto employeeInfoDto) {
         if (employeeInfoRepository.existsByUsername(employeeInfoDto.getUsername())) {
             throw new EntityExistsException("Error: Username is already taken!");
         }
-        
+
         if (employeeInfoRepository.existsByEmail(employeeInfoDto.getEmail())) {
             throw new EntityExistsException("Error: Email is already in use!");
         }
@@ -56,22 +58,17 @@ public class AuthService {
 
         return copyProp(employeeInfo, EmployeeInfoDto.class);
     }
-    
-    
+
+
     @Transactional
-    public ResponseEntity<UserResponse> login(UserRequest userRequest) {
-        
-        
-     /*   Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequest.getUsername(),
-                userRequest.getPassword()));
-        String token = "";
-        if (authentication.isAuthenticated()) {
-             token = jwtUtil.generateJwtToken(userRequest.getUsername());
-        }*/
-       
-        
-        ResponseEntity<UserResponse> responseEntity = ResponseEntity.ok(new UserResponse("tokenNNN", "Login Successful"));
-        return responseEntity;
+    public UserResponse login(UserRequest userRequest) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
+
+        String token = jwtUtil.generateJwtToken(userRequest.getUsername(), authentication);
+        UserResponse userResponse = new UserResponse(token, "Login Successful");
+        return userResponse;
     }
     
 /*    @Transactional
@@ -81,7 +78,7 @@ public class AuthService {
     }*/
 
 
-    public Set<Role> getRoles( Set<Role> roleSet) {
+    public Set<Role> getRoles(Set<Role> roleSet) {
         Set<Role> roles = new HashSet<>();
         return roleSet = roleSet.stream().map(r -> {
             Role role = new Role();

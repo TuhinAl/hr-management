@@ -7,6 +7,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -30,12 +33,17 @@ import java.util.List;
 @Component
 public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
-    @Autowired private UserDetailsService userDetailsService;
-    @Autowired private JwtUtil jwtUtil;
+
+     private final UserDetailsService userDetailsService;
+     private final JwtUtil jwtUtil;
 
     public static final String JWT_HEADER = "Authorization";
-    public static final    String KEY = "Thesearehugenumbersforanewappevenwhentakingintoaccountthatthemorethantwobillionmonthlyactive" +
-            "Instagramuserswerepromotedtoinstallthisnewapp";
+
+    @Autowired
+    public JwtTokenValidatorFilter(UserDetailsService userDetailsService, JwtUtil jwtUtil) {
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -46,17 +54,11 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             try {
 
-                SecretKey secretKey = Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
-                Claims claims = Jwts
-                        .parserBuilder()
-                        .setSigningKey(secretKey)
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
+                Claims claims = jwtUtil.getClaims(token);
 
-//                String username = claims.getSubject();
+                String username = claims.getSubject();
 //                List<GrantedAuthority> authorities = new ArrayList<>();
-                String username = String.valueOf(claims.get("username"));
+//                String username = String.valueOf(claims.get("username"));
                 String authorities = (String) claims.get("authorities");
 
                 if (null != username && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -2,6 +2,7 @@ package com.tuhinal.employeemanagement.controller;
 
 
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
+import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import com.tuhinal.employeemanagement.security.jwt.UserRequest;
 import com.tuhinal.employeemanagement.security.jwt.UserResponse;
 import com.tuhinal.employeemanagement.service.AuthService;
@@ -27,13 +28,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody UserRequest userRequest) {
-        return authService.login(userRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> login(@RequestBody UserRequest userRequest) {
+
+        return responseFactory.saveResponse(authService.login(userRequest));
     }
 
     @PostMapping("/notices")
-    public String profile() {
-        return "This is your notice";
+    public EmployeeInfoDto profile() {
+        EmployeeInfoDto employeeInfoDto = new EmployeeInfoDto();
+        employeeInfoDto.setFirstName("Alauddin");
+        employeeInfoDto.setLastName("Tuhin");
+        employeeInfoDto.setUsername("pagla");
+        employeeInfoDto.setEmployeeNcId("121");
+        return employeeInfoDto;
     }
 
  /*   @PostMapping("/logout")

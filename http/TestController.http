@@ -9,7 +9,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 ###
-GET http://localhost:9000/api/test/mod
+POST http://localhost:9000/notices
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
