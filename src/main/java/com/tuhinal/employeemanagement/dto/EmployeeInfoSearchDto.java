@@ -46,8 +46,6 @@ public class EmployeeInfoSearchDto extends SearchDto{
     
     private String designationTypeEnumValue;
 
-    private EmployeeAccountDto employeeAccountDto;
-    
     private EmployeeAccountTransactionDto employeeAccountTransactionDto;
     
     private EmployeeAttendanceDto employeeAttendanceDto;

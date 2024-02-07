@@ -1,49 +1,62 @@
 package com.tuhinal.employeemanagement.security.filter;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+@Component
 public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
     public static final String JWT_HEADER = "Authorization";
-    @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    public static final String  KEY = "Thesearehugenumbersforanewappevenwhentakingintoaccountthatthemorethantwobillionmonthlyactive" +
+            "Instagramuserswerepromotedtoinstallthisnewapp";
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (null != authentication) {
-            String key = "Thesearehugenumbersforanewappevenwhentakingintoaccountthatthemorethantwobillionmonthlyactive" +
-                    "Instagramuserswerepromotedtoinstallthisnewapp";
-            SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
-            String token = Jwts.builder()
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+
+        String username = request.getParameter("username");
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = new User(username, "", new ArrayList<>());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            SecretKey secretKey = Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
+
+            String token = Jwts
+                    .builder()
                     .setIssuer("Tuhin")
                     .setSubject("JWT Token")
-                    .claim("username", authentication.getName())
-                    .claim("authorities", populateAuthorities(authentication.getAuthorities()))
+//                    .setSubject(username)
+                    .claim("username", authenticationToken.getName())
+                    .claim("authorities", populateAuthorities(authenticationToken.getAuthorities()))
                     .setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date((System.currentTimeMillis() + 60000)))
                     .signWith(secretKey)
                     .compact();
-            response.setHeader(JWT_HEADER, token);
+            response.addHeader(JWT_HEADER, "Bearer " + token);
         }
-
-        filterChain.doFilter(request, response);
+        chain.doFilter(request, response);
     }
 
     private String populateAuthorities(Collection<? extends GrantedAuthority> collection) {
@@ -56,6 +69,6 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getServletPath().equals("/login");
+        return !request.getServletPath().equals("/api/auth/login");
     }
 }

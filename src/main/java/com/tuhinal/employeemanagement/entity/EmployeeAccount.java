@@ -22,6 +22,11 @@ import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Deprecated
+/**
+ * Please dont use this class
+ */
 @Entity
 @Table(name = "employee_account",
         uniqueConstraints = {

@@ -16,10 +16,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 @Component
-@Deprecated
-/**
- * Please dont use this class
- */
 public class JwtUtil{
 
     public static final String JWT_HEADER = "Authorization";

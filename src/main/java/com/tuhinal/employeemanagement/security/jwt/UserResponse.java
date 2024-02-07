@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserResponse {
     
-    private String token ; // like email
+    private String token ;
     private String message;
 }

@@ -1,7 +1,9 @@
 package com.tuhinal.employeemanagement.security.config;
 
 import com.tuhinal.employeemanagement.entity.EmployeeAccount;
+import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import com.tuhinal.employeemanagement.repository.EmployeeAccountRepository;
+import com.tuhinal.employeemanagement.repository.EmployeeInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,14 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     
-    private final EmployeeAccountRepository employeeAccountRepository;
+    private final EmployeeInfoRepository employeeInfoRepository;
     
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        EmployeeAccount employeeAccount = employeeAccountRepository.findByUsername(username)
+        EmployeeInfo employeeInfo = employeeInfoRepository.findEmployeeInfoByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         
-        return UserDetailsImpl.build(employeeAccount);
+        return UserDetailsImpl.build(employeeInfo);
     }
 }

@@ -2,6 +2,7 @@ package com.tuhinal.employeemanagement.security.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuhinal.employeemanagement.entity.EmployeeAccount;
+import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,16 +37,16 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
     
-    public static UserDetailsImpl build(EmployeeAccount employeeAccount) {
-        List<GrantedAuthority> authorities = employeeAccount.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getEmployeeRole().name()))
+    public static UserDetailsImpl build(EmployeeInfo employeeInfo) {
+        List<GrantedAuthority> authorities = employeeInfo.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRoleTypeEnumKey().name()))
                 .collect(Collectors.toList());
         
         return new UserDetailsImpl(
-                employeeAccount.getId(),
-                employeeAccount.getUsername(),
-                employeeAccount.getEmail(),
-                employeeAccount.getPassword(),
+                employeeInfo.getId(),
+                employeeInfo.getUsername(),
+                employeeInfo.getEmail(),
+                employeeInfo.getPassword(),
                 authorities);
     }
     

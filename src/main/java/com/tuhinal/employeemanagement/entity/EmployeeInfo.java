@@ -3,6 +3,7 @@ package com.tuhinal.employeemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tuhinal.employeemanagement.enums.DesignationTypeEnum;
 import com.tuhinal.employeemanagement.enums.PaymentTypeEnum;
+import com.tuhinal.employeemanagement.enums.RoleTypeEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,9 +44,21 @@ public class EmployeeInfo {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     
-    @Column(name = "name")
-    private String name;
-    
+    @Column(name = "firstName")
+    private String firstName;
+
+    @Column(name = "lastName")
+    private String lastName;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "employee_nc_id")
     private String employeeNcId;
     
@@ -70,6 +83,13 @@ public class EmployeeInfo {
     
     @Column(name = "designation_type_enum_value")
     private String designationTypeEnumValue;
+
+    @Column(name = "role_type_enum_key")
+    @Enumerated(EnumType.STRING)
+    private RoleTypeEnum roleTypeEnumKey;
+
+    @Column(name = "role_type_enum_value")
+    private String roleTypeEnumValue;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_account_id")
@@ -86,8 +106,13 @@ public class EmployeeInfo {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_bank_info_id")
     private EmployeeBankInfo employeeBankInfo;
-    
-   public EmployeeInfo(String id) {
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "employee_info_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+    public EmployeeInfo(String id) {
         this.id = id;
     }
 }

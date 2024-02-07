@@ -17,3 +17,17 @@ Authorization: Bearer {{access_token}}
   "employeeBankInfoDto": null,
   "enabled": true
 }
+
+###
+POST http://localhost:9000/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Alauddin",
+  "lastName": "Tuhin",
+  "email": "tuhin@gm.com",
+  "username": "tuhinal",
+  "password": "tuhin123",
+  "role": "EMPLOYEE",
+  "address": "Dhaka-1212, bangladesh"
+}
