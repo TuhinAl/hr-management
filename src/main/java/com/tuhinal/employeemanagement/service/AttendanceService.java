@@ -65,8 +65,8 @@ public class AttendanceService {
                 Duration duration = Duration.between(outTime, targetDateTime);
                 long minutes = duration.toMinutes();
                 if (outTime.toLocalTime().isBefore(desiredTime)) {
-                    attendanceByEmployeeId.setEntryTypeKey(AttendanceEntryTypeEnum.EARLY_LEAVE);
-                    attendanceByEmployeeId.setEntryTypeValue(AttendanceEntryTypeEnum.EARLY_LEAVE.getValue());
+                    attendanceByEmployeeId.setLeaveTypeKey(AttendanceEntryTypeEnum.EARLY_LEAVE);
+                    attendanceByEmployeeId.setLeaveTypeValue(AttendanceEntryTypeEnum.EARLY_LEAVE.getValue());
                     attendanceByEmployeeId.setEarlyLeaveMinutes(minutes);
                 } else {
                     attendanceByEmployeeId.setEntryTypeKey(AttendanceEntryTypeEnum.ON_TIME);
