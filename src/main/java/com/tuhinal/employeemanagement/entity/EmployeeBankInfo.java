@@ -1,5 +1,6 @@
 package com.tuhinal.employeemanagement.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,12 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "employee_bank_info")
@@ -39,7 +34,11 @@ public class EmployeeBankInfo {
     
     @Column(name = "current_balance")
     private Double currentBalance;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_info_id")
+    private EmployeeInfo employeeInfo;
+
     @Column(name = "enabled", nullable = false)
     protected Boolean enabled = true;
     

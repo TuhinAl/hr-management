@@ -22,7 +22,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<AttendanceDto>> save(@RequestBody AttendanceDto attendanceDto) {
+    public ResponseEntity<ApiResponse<AttendanceDto>> save(@RequestBody AttendanceDto attendanceDto) throws Exception {
         return responseFactory.saveResponse(attendanceService.checkInOut(attendanceDto));
     }
 

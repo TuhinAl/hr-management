@@ -31,7 +31,8 @@ public class Attendance extends Auditable{
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    @Column(name = "employee_id")
+    //todo need to map
+    @Column(name = "employee_id", nullable = false)
     private String employeeId;
 
     @Column(name = "employee_nc_id")
@@ -40,12 +41,19 @@ public class Attendance extends Auditable{
     @Column(name = "weekday")
     private String weekDay;
 
-    @Column(name = "attendance_type_key") // Check-In/Check-Out
+    @Column(name = "attendance_entry_type_key") // Check-In/Check-Out
     @Enumerated(EnumType.STRING)
-    private AttendanceEnum attendanceTypeKey;
+    private AttendanceEnum attendanceEntryTypeKey;
 
-    @Column(name = "attendance_type_value")
-    private String attendanceTypeValue;
+    @Column(name = "attendance_entry_type_value")
+    private String attendanceEntryTypeValue;
+
+    @Column(name = "attendance_Leave_type_key") // Check-In/Check-Out
+    @Enumerated(EnumType.STRING)
+    private AttendanceEnum attendanceLeaveTypeKey;
+
+    @Column(name = "attendance_Leave_type_value")
+    private String attendanceLeaveTypeValue;
 
     @Column(name = "entry_type_key") // OnTime/Late
     @Enumerated(EnumType.STRING)
@@ -80,6 +88,17 @@ public class Attendance extends Auditable{
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime outTimeAt;
+
+    @Column(name = "date_at")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateAt;
+
+    @Column(name = "is_already_checked_in")
+    private Boolean isAlreadyCheckedIn = false;
+
+    @Column(name = "is_already_checked_out")
+    private Boolean isAlreadyCheckedOut = false;
 
 
     public Attendance(String id) {

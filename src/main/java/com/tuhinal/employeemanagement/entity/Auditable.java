@@ -30,7 +30,7 @@ public class Auditable {
   @Column(name = "created_at", updatable = false)
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  protected LocalDateTime createdDate;
+  protected LocalDateTime createdDate = LocalDateTime.now();
 
   @LastModifiedBy
   @Column(name = "update_by", insertable = false)

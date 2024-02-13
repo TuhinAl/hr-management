@@ -7,6 +7,8 @@ import com.tuhinal.employeemanagement.entity.Role;
 import com.tuhinal.employeemanagement.enums.RoleTypeEnum;
 import com.tuhinal.employeemanagement.repository.EmployeeInfoRepository;
 import com.tuhinal.employeemanagement.repository.RoleRepository;
+import com.tuhinal.employeemanagement.security.config.UserDetailsImpl;
+import com.tuhinal.employeemanagement.security.config.UserDetailsServiceImpl;
 import com.tuhinal.employeemanagement.security.filter.JwtUtil;
 import com.tuhinal.employeemanagement.security.jwt.UserRequest;
 import com.tuhinal.employeemanagement.security.jwt.UserResponse;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,9 +68,10 @@ public class AuthService {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
+        UserDetailsImpl user =  (UserDetailsImpl) authentication.getPrincipal();
 
         String token = jwtUtil.generateJwtToken(userRequest.getUsername(), authentication);
-        UserResponse userResponse = new UserResponse(token, "Login Successful");
+        UserResponse userResponse = new UserResponse(user.getId(), token, "Login Successful");
         return userResponse;
     }
     

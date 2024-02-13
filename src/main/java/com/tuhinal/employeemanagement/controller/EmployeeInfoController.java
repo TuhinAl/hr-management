@@ -2,11 +2,13 @@ package com.tuhinal.employeemanagement.controller;
 
 
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
+import com.tuhinal.employeemanagement.dto.EmployeeInfoSearchDto;
 import com.tuhinal.employeemanagement.service.EmployeeInfoService;
 import com.tuhinal.employeemanagement.util.ApiResponse;
 import com.tuhinal.employeemanagement.util.ApiResponseEntityFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +29,10 @@ public class EmployeeInfoController {
     public ResponseEntity<ApiResponse<EmployeeInfoDto>> save(@RequestBody EmployeeInfoDto employeeInfoDto) {
         return responseFactory.saveResponse(employeeInfoService.save(employeeInfoDto));
     }
-    @GetMapping()
-    public ResponseEntity<ApiResponse<EmployeeInfoDto>> getData() {
-        return responseFactory.saveResponse("Your Data");
+
+    @PostMapping("/search")
+    public ResponseEntity<ApiResponse<Page<EmployeeInfoDto>>> search(@RequestBody EmployeeInfoSearchDto employeeInfoSearchDto) {
+        return responseFactory.getResponse(employeeInfoService.search(employeeInfoSearchDto));
     }
     
 }

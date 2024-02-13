@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping()
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4240")
 public class AuthController {
 
     private final ApiResponseEntityFactory responseFactory;

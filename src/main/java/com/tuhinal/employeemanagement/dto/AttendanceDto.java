@@ -29,13 +29,20 @@ public class AttendanceDto {
     private String employeeNcId;
     private String weekDay;
 
-    @Enumerated(EnumType.STRING)// Check-In/Check-Out
-    private AttendanceEnum attendanceTypeKey;
-    private String attendanceTypeValue;
+    @Enumerated(EnumType.STRING)// Check-In
+    private AttendanceEnum checkInOutTypeKey;
+
+    @Enumerated(EnumType.STRING)// Check-In
+    private AttendanceEnum attendanceEntryTypeKey;
+    private String attendanceEntryTypeValue;
+
+    @Enumerated(EnumType.STRING)// Check-Out
+    private AttendanceEnum attendanceLeaveTypeKey;
+    private String attendanceLeaveTypeValue;
 
     @Enumerated(EnumType.STRING)// OnTime/Late
     private AttendanceEntryTypeEnum entryTypeKey;
-    private String entry_type_Value;
+    private String entryTypeValue;
 
     @Enumerated(EnumType.STRING)// OnTime/Early leave
     private AttendanceEntryTypeEnum leaveTypeKey;
@@ -52,6 +59,10 @@ public class AttendanceDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime outTimeAt;
+
+    private Boolean isAlreadyCheckedIn;
+    private Boolean isAlreadyCheckedOut;
+
     public AttendanceDto(String id) {
         this.id = id;
     }

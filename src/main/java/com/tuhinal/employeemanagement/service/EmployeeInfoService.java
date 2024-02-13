@@ -1,17 +1,25 @@
 package com.tuhinal.employeemanagement.service;
 
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
+import com.tuhinal.employeemanagement.dto.EmployeeInfoSearchDto;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import com.tuhinal.employeemanagement.entity.QEmployeeInfo;
 import com.tuhinal.employeemanagement.repository.EmployeeInfoRepository;
 import com.tuhinal.employeemanagement.util.IdGeneratorService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static com.tuhinal.employeemanagement.util.TransformUtil.copyList;
 import static com.tuhinal.employeemanagement.util.TransformUtil.copyProp;
 
 
@@ -21,7 +29,8 @@ public class EmployeeInfoService {
     
     private final EmployeeInfoRepository employeeInfoRepository;
     private final IdGeneratorService idGeneratorService;
-    
+    private final EntityManager entityManager;
+
     @Transactional
     public EmployeeInfoDto save(EmployeeInfoDto employeeInfoDto) {
         var employeeInfo = copyProp(employeeInfoDto, EmployeeInfo.class);
@@ -32,24 +41,22 @@ public class EmployeeInfoService {
         return copyProp(employeeInfoFromDb, EmployeeInfoDto.class);
     }
 
-/*
     public Page<EmployeeInfoDto> search(EmployeeInfoSearchDto employeeInfoSearchDto) {
 
-        final QOtRequisition qOtRequisition = QOtRequisition.otRequisition;
-        final JPAQuery<OtRequisition> otRequisitionJPAQuery = new JPAQuery<>(entityManager);
+        final QEmployeeInfo qEmployeeInfo = QEmployeeInfo.employeeInfo;
+        final JPAQuery<EmployeeInfo> otRequisitionJPAQuery = new JPAQuery<>(entityManager);
 
-        Predicate predicate = searchPredicate(otRequisitionSearchDto);
-        Pageable pageable = PageRequest.of(otRequisitionSearchDto.getPage(), otRequisitionSearchDto.getSize());
+//        Predicate predicate = searchPredicate(otRequisitionSearchDto);
+        Pageable pageable = PageRequest.of(employeeInfoSearchDto.getPage(), employeeInfoSearchDto.getSize());
 
         var query = otRequisitionJPAQuery
-                .from(qOtRequisition)
-                .where(predicate)
+                .from(qEmployeeInfo)
+                .where(qEmployeeInfo.id.eq(employeeInfoSearchDto.getId()))
                 .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .orderBy(qOtRequisition.createdDate.desc());
+                .offset(pageable.getOffset());
+//                .orderBy(qEmployeeInfo.at.desc());
 
         return new PageImpl<>(copyList(query.fetch(), EmployeeInfoDto.class), pageable, query.fetchCount());
     }
-*/
 
 }

@@ -35,8 +35,9 @@ public class EmployeeInfoDto {
     private String username;
     private String password;
     private Set<Role> role;
+    private String employeeId;
     private String employeeNcId;
-    
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;

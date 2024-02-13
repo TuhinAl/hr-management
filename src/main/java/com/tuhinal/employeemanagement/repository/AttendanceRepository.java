@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AttendanceRepository
         extends JpaRepository<Attendance, String>, QuerydslPredicateExecutor<Attendance> {
-
+    Attendance findAttendanceByEmployeeId(String employeeId);
 
 }
