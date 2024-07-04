@@ -9,6 +9,7 @@ import com.tuhinal.employeemanagement.util.ApiResponse;
 import com.tuhinal.employeemanagement.util.ApiResponseEntityFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,11 @@ public class AttendanceController {
     @PostMapping()
     public ResponseEntity<ApiResponse<AttendanceDto>> save(@RequestBody AttendanceDto attendanceDto) throws Exception {
         return responseFactory.saveResponse(attendanceService.checkInOut(attendanceDto));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Page<AttendanceDto>>> getAttendance(@RequestBody AttendanceDto attendanceDto) {
+        return responseFactory.getResponse(attendanceService.getEmployeeWiseAttendance(attendanceDto));
     }
 
 }

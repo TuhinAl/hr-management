@@ -10,11 +10,17 @@ import com.tuhinal.employeemanagement.enums.AttendanceEnum;
 import com.tuhinal.employeemanagement.repository.AttendanceRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.tuhinal.employeemanagement.util.TransformUtil.copyProp;
 
@@ -41,10 +47,12 @@ public class AttendanceService {
 
             if (attendanceDto.getCheckInOutTypeKey().equals(AttendanceEnum.CHECK_IN)) {
                 LocalDateTime inTime = LocalDateTime.now(ZoneId.of("Asia/Dhaka"));
-                LocalTime desiredTime = LocalTime.of(9, 0, 59);
+                LocalTime desiredTime = LocalTime.of(8, 35, 59);
                 if (inTime.toLocalTime().isAfter(desiredTime)) {
                     attendanceByEmployeeId.setEntryTypeKey(AttendanceEntryTypeEnum.LATE);
                     attendanceByEmployeeId.setEntryTypeValue(AttendanceEntryTypeEnum.LATE.getValue());
+                    // TODO set late time
+
                 } else {
                     attendanceByEmployeeId.setEntryTypeKey(AttendanceEntryTypeEnum.ON_TIME);
                     attendanceByEmployeeId.setEntryTypeValue(AttendanceEntryTypeEnum.ON_TIME.getValue());
@@ -142,6 +150,22 @@ public class AttendanceService {
                 .where(qAttendance.employeeId.eq(attendanceDto.getEmployeeId())
                         .and(qAttendance.dateAt.eq(LocalDate.now())))
                 .fetchFirst();
+    }
+
+    public Page<AttendanceDto> getEmployeeWiseAttendance(AttendanceDto attendanceDto) {
+
+        Pageable pageable = PageRequest.of(attendanceDto.getPage(), attendanceDto.getSize());
+        final QAttendance qAttendance = QAttendance.attendance;
+        final JPAQuery<Attendance> query = new JPAQuery<>(entityManager);
+
+        List<Attendance> attendanceList = query.from(qAttendance)
+                .where(qAttendance.createdDate.between(attendanceDto.getFromDate()
+                        , attendanceDto.getToDate()).and(qAttendance.employeeId.eq(attendanceDto.getEmployeeId())))
+                .fetch();
+        List<AttendanceDto> attendanceDtoList = attendanceList.stream().map(attendance -> {
+            return copyProp(attendance, AttendanceDto.class);
+        }).toList();
+        return new PageImpl<>(attendanceDtoList, pageable, attendanceDto.getSize());
     }
 
 }

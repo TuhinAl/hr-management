@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -24,6 +23,7 @@ public class JwtUtil {
     public static final String KEY = "Thesearehugenumbersforanewappevenwhentakingintoaccountthatthemorethantwobillionmonthlyactive" +
             "Instagramuserswerepromotedtoinstallthisnewapp";
 
+    private final Map<String, Long> tokenBlackList = new ConcurrentHashMap<>();
 
     public String generateJwtToken(String username, Authentication authentication) {
         String token = "";
@@ -79,6 +79,13 @@ public class JwtUtil {
             authSet.add(grantedAuthority.getAuthority());
         }
         return String.join(",", authSet);
+    }
+
+    public void invalidateToken(String token) {
+        SecretKey secretKey = Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        long remainingTime = claims.getExpiration().getTime() - System.currentTimeMillis();
+        tokenBlackList.put(token, System.currentTimeMillis() + remainingTime);
     }
 
 }

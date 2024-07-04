@@ -3,13 +3,16 @@ package com.tuhinal.employeemanagement.controller;
 
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
+import com.tuhinal.employeemanagement.security.filter.JwtUtil;
 import com.tuhinal.employeemanagement.security.jwt.UserRequest;
 import com.tuhinal.employeemanagement.security.jwt.UserResponse;
 import com.tuhinal.employeemanagement.service.AuthService;
 import com.tuhinal.employeemanagement.util.ApiResponse;
 import com.tuhinal.employeemanagement.util.ApiResponseEntityFactory;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,6 +24,7 @@ public class AuthController {
 
     private final ApiResponseEntityFactory responseFactory;
     private final AuthService authService;
+    private final JwtUtil jwtUtil;
 
 
     @PostMapping("/register")
@@ -32,6 +36,17 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserResponse>> login(@RequestBody UserRequest userRequest) {
 
         return responseFactory.saveResponse(authService.login(userRequest));
+    }
+
+    @PostMapping("/api/logout")
+    public ResponseEntity<ApiResponse<UserResponse>> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            jwtUtil.invalidateToken(token);
+        }
+        SecurityContextHolder.clearContext();
+        return responseFactory.updateResponse("");
     }
 
     @PostMapping("/notices")

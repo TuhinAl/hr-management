@@ -60,8 +60,19 @@ public class AttendanceDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime outTimeAt;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime fromDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime toDate;
+
     private Boolean isAlreadyCheckedIn;
     private Boolean isAlreadyCheckedOut;
+
+    private Integer page;
+    private Integer size;
 
     public AttendanceDto(String id) {
         this.id = id;

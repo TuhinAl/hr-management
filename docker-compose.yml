@@ -1,0 +1,76 @@
+#version: '3.8'
+#
+#services:
+#  backend:
+#    image: your-backend-image:latest
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - DB_HOST=db
+#      - DB_PORT=5432
+#      # Add any other backend environment variables here
+#    depends_on:
+#      - db
+#
+#  frontend:
+#    image: your-frontend-image:latest
+#    ports:
+#      - "3000:3000"
+#    #environment:
+#    # Add any frontend environment variables here
+#
+#  db:
+#    image: postgres:latest
+#    environment:
+#      - POSTGRES_DB=my_database
+#      - POSTGRES_USER=my_user
+#      - POSTGRES_PASSWORD=my_password
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#
+#volumes:
+#  postgres_data:
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: employee_management
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring_boot_backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/employee_management
+      SPRING_DATASOURCE_USERNAME: your_db_user
+      SPRING_DATASOURCE_PASSWORD: your_db_password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: angular_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
