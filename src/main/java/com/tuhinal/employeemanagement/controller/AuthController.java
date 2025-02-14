@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping()
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:4240")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     private final ApiResponseEntityFactory responseFactory;
