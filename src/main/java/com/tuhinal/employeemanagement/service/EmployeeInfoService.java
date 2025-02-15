@@ -4,6 +4,7 @@ package com.tuhinal.employeemanagement.service;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
 import com.tuhinal.employeemanagement.dto.EmployeeInfoSearchDto;
+import com.tuhinal.employeemanagement.dto.SalaryBreakdownDto;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import com.tuhinal.employeemanagement.entity.QEmployeeInfo;
 import com.tuhinal.employeemanagement.repository.EmployeeInfoRepository;
@@ -57,6 +58,25 @@ public class EmployeeInfoService {
 //                .orderBy(qEmployeeInfo.at.desc());
 
         return new PageImpl<>(copyList(query.fetch(), EmployeeInfoDto.class), pageable, query.fetchCount());
+    }
+
+    public SalaryBreakdownDto getSalaryBreakdown(Double grossSalary) {
+        SalaryBreakdownDto salaryBreakdownDto = new SalaryBreakdownDto();
+        Double basicSalary = grossSalary * 0.6;
+        Double houseRent = grossSalary * 0.3;
+        Double medicalAllowance = grossSalary * 0.05;
+        Double otherAllowance = grossSalary * 0.05;
+        Double providentFund = grossSalary * 0.08;
+        salaryBreakdownDto.setBasicSalary(basicSalary);
+        salaryBreakdownDto.setHouseRent(houseRent);
+        salaryBreakdownDto.setMedicalAllowance(medicalAllowance);
+        salaryBreakdownDto.setProvidentFund(providentFund);
+        salaryBreakdownDto.setDailyAllowance(0.0);
+        salaryBreakdownDto.setPhoneBill(0.0);
+        salaryBreakdownDto.setInternetBill(0.0);
+        salaryBreakdownDto.setOtherAllowance(otherAllowance);
+        salaryBreakdownDto.setGrossSalary(grossSalary);
+        return salaryBreakdownDto;
     }
 
 }
