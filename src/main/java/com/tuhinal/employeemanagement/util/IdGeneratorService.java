@@ -2,12 +2,10 @@ package com.tuhinal.employeemanagement.util;
 
 
 import com.querydsl.jpa.impl.JPAQuery;
-import com.tuhinal.employeemanagement.entity.EmployeeAccount;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import com.tuhinal.employeemanagement.entity.QEmployeeInfo;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

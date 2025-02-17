@@ -3,9 +3,11 @@ package com.tuhinal.employeemanagement.enums;
 
 public enum LeaveTypeEnum {
 
-  PENDING("PENDING", "Pending"),
-  RECEIVED("RECEIVED", "Received"),
-  DISBURSED("DISBURSED", "Disbursed");
+  CASUAL("CASUAL", "Casual"),
+  SICK("SICK", "Sick"),
+  EARNED("EARNED", "Earned"),
+  MORNING("MORNING", "Morning"),
+  AFTERNOON("AFTERNOON", "Afternoon");
 
   private final String key;
   private final String value;

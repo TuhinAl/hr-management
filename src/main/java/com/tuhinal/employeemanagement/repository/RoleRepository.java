@@ -1,7 +1,6 @@
 package com.tuhinal.employeemanagement.repository;
 
 import com.tuhinal.employeemanagement.entity.Role;
-import com.tuhinal.employeemanagement.enums.EmployeeRole;
 import com.tuhinal.employeemanagement.enums.RoleTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

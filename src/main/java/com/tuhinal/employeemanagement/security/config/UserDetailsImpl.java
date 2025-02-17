@@ -1,7 +1,6 @@
 package com.tuhinal.employeemanagement.security.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tuhinal.employeemanagement.entity.EmployeeAccount;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import lombok.Getter;
 import lombok.Setter;

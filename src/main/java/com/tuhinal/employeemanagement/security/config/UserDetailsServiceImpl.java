@@ -1,8 +1,6 @@
 package com.tuhinal.employeemanagement.security.config;
 
-import com.tuhinal.employeemanagement.entity.EmployeeAccount;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
-import com.tuhinal.employeemanagement.repository.EmployeeAccountRepository;
 import com.tuhinal.employeemanagement.repository.EmployeeInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
