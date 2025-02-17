@@ -39,6 +39,9 @@ public class EmployeeBankInfo {
     @JoinColumn(name = "employee_info_id")
     private EmployeeInfo employeeInfo;
 
+    @Column(name = "employee_info_id", insertable = false, updatable = false)
+    private String employeeInfoId;
+
     @Column(name = "enabled", nullable = false)
     protected Boolean enabled = true;
     

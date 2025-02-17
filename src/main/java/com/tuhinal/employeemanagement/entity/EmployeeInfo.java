@@ -79,31 +79,29 @@ public class EmployeeInfo {
 
     @Column(name = "role_type_enum_value")
     private String roleTypeEnumValue;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "employee_account_id")
-    private EmployeeAccount employeeAccount;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "employee_account_transaction_id")
-    private EmployeeAccountTransaction employeeAccountTransaction;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "employee_attendance_id")
-    private EmployeeAttendance employeeAttendance;
+
+    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    private List<Leave> leaveList;
+
+    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    private List<LeaveHistory> leaveHistoryList;
+
+    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    private List<EmployeeAccountTransaction> employeeAccountTransactionList;
+
+    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    private List<EmployeeAttendance> employeeAttendanceList;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_bank_info_id")
     private EmployeeBankInfo employeeBankInfo;
-
-    @OneToMany(mappedBy ="employeeInfo")
-    private List<EmployeeBankInfo> employeeBankInfoList = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "employee_info_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
     public EmployeeInfo(String id) {
         this.id = id;
     }

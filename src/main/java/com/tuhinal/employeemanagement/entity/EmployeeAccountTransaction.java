@@ -1,6 +1,9 @@
 package com.tuhinal.employeemanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,15 +37,25 @@ public class EmployeeAccountTransaction {
     
     @Column(name = "transaction_nc_id")
     private String transactionNcId;
+
+    @Column(name = "amount")
+    private Double amount;
     
     @Column(name = "transaction_time")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime transactionDateTime;
     
     @Column(name = "enabled", nullable = false)
     protected Boolean enabled = true;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_info_id", nullable = false)
+    private EmployeeInfo employeeInfo;
+
+    @Column(name = "employee_info_id", insertable = false, updatable = false)
+    private String employeeInfoId;
+
     public EmployeeAccountTransaction(String id) {
         this.id = id;
     }

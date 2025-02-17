@@ -3,8 +3,11 @@ package com.tuhinal.employeemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +45,6 @@ public class EmployeeAttendance  {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkedOutTime;
- 
     
     @Column(name = "checked_date_time")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -51,6 +53,13 @@ public class EmployeeAttendance  {
     
     @Column(name = "enabled", nullable = false)
     protected Boolean enabled = true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_info_id", nullable = false)
+    private EmployeeInfo employeeInfo;
+
+    @Column(name = "employee_info_id", insertable = false, updatable = false)
+    private String employeeInfoId;
     
     public EmployeeAttendance(String id) {
         this.id = id;
