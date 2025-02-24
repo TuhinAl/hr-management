@@ -44,7 +44,7 @@ public class LeaveService {
     @Transactional
     public LeaveDto adjustLeave(LeaveDto leaveDto) {
 
-        Leave leave = leaveRepository.findLeaveByIdAndEmployeeInfoIdAndCurrentYear(leaveDto.getId(),
+        Leave leave = leaveRepository.findLeaveByEmployeeInfoIdAndCurrentYear(
                 leaveDto.getEmployeeInfoId(), LocalDateTime.now());
 
         if (leaveDto.getTakenLeaveType().equals(LeaveTypeEnum.EARNED)) {

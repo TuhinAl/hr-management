@@ -2,6 +2,7 @@ package com.tuhinal.employeemanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tuhinal.employeemanagement.enums.AttendanceEntryTypeEnum;
+import com.tuhinal.employeemanagement.enums.LeaveStatusEnum;
 import com.tuhinal.employeemanagement.enums.LeaveTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -67,6 +68,13 @@ public class LeaveHistory {
 
     @Column(name = "half_day_leave_value")
     private String halfDayLeaveValue;
+
+    @Column(name = "leave_status_key")
+    @Enumerated(EnumType.STRING)
+    private LeaveStatusEnum leaveStatusKey;
+
+    @Column(name = "leave_status_value")
+    private String leaveStatusValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_info_id", nullable = false)

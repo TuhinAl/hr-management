@@ -2,6 +2,7 @@ package com.tuhinal.employeemanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
+import com.tuhinal.employeemanagement.enums.LeaveStatusEnum;
 import com.tuhinal.employeemanagement.enums.LeaveTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,8 +52,11 @@ public class LeaveHistoryDto {
 
     @Enumerated(EnumType.STRING)
     private LeaveTypeEnum halfDayLeaveKey;
-
     private String halfDayLeaveValue;
+
+    @Enumerated(EnumType.STRING)
+    private LeaveStatusEnum leaveStatusKey;
+    private String leaveStatusValue;
 
     private EmployeeInfoDto employeeInfoDto;
     private String employeeInfoId;
