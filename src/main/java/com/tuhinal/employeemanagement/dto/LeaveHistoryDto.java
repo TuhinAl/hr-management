@@ -45,7 +45,6 @@ public class LeaveHistoryDto {
 
     @Enumerated(EnumType.STRING)
     private LeaveTypeEnum timeOfKey;
-
     private String timeOffValue;
 
     private Boolean isHalfDayLeave;
