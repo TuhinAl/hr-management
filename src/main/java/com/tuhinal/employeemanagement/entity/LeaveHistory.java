@@ -51,7 +51,7 @@ public class LeaveHistory {
     @Column(name = "number_of_days", nullable = false)
     private Double numberOfDays;
 
-    @Column(name = "time_off_key") // OnTime/Late
+    @Column(name = "time_off_key")
     @Enumerated(EnumType.STRING)
     private LeaveTypeEnum timeOfKey;
 
@@ -61,7 +61,7 @@ public class LeaveHistory {
     @Column(name = "is_half_day_leave")
     private Boolean isHalfDayLeave;
 
-    @Column(name = "half_day_leave_key") // OnTime/Late
+    @Column(name = "half_day_leave_key")
     @Enumerated(EnumType.STRING)
     private LeaveTypeEnum halfDayLeaveKey;
 

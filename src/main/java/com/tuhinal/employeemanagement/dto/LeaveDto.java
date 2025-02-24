@@ -2,8 +2,11 @@ package com.tuhinal.employeemanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
+import com.tuhinal.employeemanagement.enums.LeaveTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -30,21 +33,27 @@ import java.time.LocalDateTime;
 public class LeaveDto {
     private String id;
 
-    private Integer totalSickLeaves;
-    private Integer remainingSickLeaves;
-    private Integer totalCasualLeaves;
-    private Integer remainingCasualLeaves;
-    private Integer totalEarnedLeaves;
-    private Integer remainingEarnedLeaves;
+    private Double totalSickLeaves;
+    private Double remainingSickLeaves;
+    private Double totalCasualLeaves;
+    private Double remainingCasualLeaves;
+    private Double totalEarnedLeaves;
+    private Double remainingEarnedLeaves;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime currentYear;
+    private Double numberOfDaysLeave;
+    @Enumerated(EnumType.STRING)
+    private LeaveTypeEnum takenLeaveType;
+
+    @Enumerated(EnumType.STRING)
+    private LeaveTypeEnum earnedLeaveName;
+
+    @Enumerated(EnumType.STRING)
+    private LeaveTypeEnum casualLeaveName;
+
+    @Enumerated(EnumType.STRING)
+    private LeaveTypeEnum sickLeaveName;
 
     protected Boolean isCurrentYear = true;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_info_id", nullable = false)
     private EmployeeInfo employeeInfo;
 
     private String employeeInfoId;

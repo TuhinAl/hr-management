@@ -1,8 +1,11 @@
 package com.tuhinal.employeemanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tuhinal.employeemanagement.enums.LeaveTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -41,22 +44,34 @@ public class Leave {
     private String id;
 
     @Column(name = "total_sick_leaves", nullable = false)
-    private Integer totalSickLeaves;
+    private Double totalSickLeaves;
 
     @Column(name = "remaining_sick_leaves", nullable = false)
-    private Integer remainingSickLeaves;
+    private Double remainingSickLeaves;
+
+    @Column(name = "sick_leave_name")
+    @Enumerated(EnumType.STRING)
+    private LeaveTypeEnum sickLeaveName;
 
     @Column(name = "total_casual_leaves", nullable = false)
-    private Integer totalCasualLeaves;
+    private Double totalCasualLeaves;
 
     @Column(name = "remaining_casual_leaves", nullable = false)
-    private Integer remainingCasualLeaves;
+    private Double remainingCasualLeaves;
+
+    @Column(name = "casual_leave_name")
+    @Enumerated(EnumType.STRING)
+    private LeaveTypeEnum casualLeaveName;
 
     @Column(name = "total_earned_leaves", nullable = false)
-    private Integer totalEarnedLeaves;
+    private Double totalEarnedLeaves;
 
     @Column(name = "remaining_earned_leaves", nullable = false)
-    private Integer remainingEarnedLeaves;
+    private Double remainingEarnedLeaves;
+
+    @Column(name = "earned_leave_name")
+    @Enumerated(EnumType.STRING)
+    private LeaveTypeEnum earnedLeaveName;
 
     @Column(name = "current_year")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -72,13 +87,6 @@ public class Leave {
 
     @Column(name = "employee_info_id", insertable = false, updatable = false)
     private String employeeInfoId;
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "user_roles",
-//            joinColumns = @JoinColumn(name = "employee_account_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    private Set<Role> roles = new HashSet<>();
-
 
     public Leave(String id) {
         this.id = id;

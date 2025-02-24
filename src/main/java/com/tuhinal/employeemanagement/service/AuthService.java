@@ -15,6 +15,8 @@ import com.tuhinal.employeemanagement.security.jwt.UserResponse;
 import com.tuhinal.employeemanagement.util.IdGeneratorService;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,9 +43,13 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
+    Logger log = LoggerFactory.getLogger(AuthService.class);
 
     @Transactional
     public EmployeeInfoDto register(EmployeeInfoDto employeeInfoDto) {
+
+        log.info("Registering user: {}", employeeInfoDto.getUsername());
+
         if (employeeInfoRepository.existsByUsername(employeeInfoDto.getUsername())) {
             throw new EntityExistsException("Error: Username is already taken!");
         }
