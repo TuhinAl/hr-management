@@ -47,8 +47,6 @@ public class LeaveHistoryService {
             leaveDto.setTakenLeaveType(LeaveTypeEnum.valueOf(leaveHistory.getTimeOfKey().name()));
             leaveService.adjustLeave(leaveDto);
         }
-        leaveHistory.setLeaveStatusKey(LeaveStatusEnum.PENDING);
-        leaveHistory.setLeaveStatusValue(LeaveStatusEnum.PENDING.getValue());
         LeaveHistory persistedLeaveHistory = leaveHistoryRepository.save(leaveHistory);
         return copyProp(persistedLeaveHistory, LeaveHistoryDto.class);
     }
