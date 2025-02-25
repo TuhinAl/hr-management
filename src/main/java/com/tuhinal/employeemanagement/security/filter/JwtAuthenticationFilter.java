@@ -43,7 +43,7 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-            String token = jwtUtil.generateJwtToken(username, authenticationToken);
+            String token = jwtUtil.generateJwtToken(authenticationToken);
             response.addHeader(JWT_HEADER, "Bearer " + token);
         }
         chain.doFilter(request, response);
