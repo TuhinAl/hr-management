@@ -2,8 +2,7 @@ package com.tuhinal.employeemanagement.controller;
 
 
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
-import com.tuhinal.employeemanagement.entity.EmployeeInfo;
-import com.tuhinal.employeemanagement.security.filter.JwtUtil;
+import com.tuhinal.employeemanagement.security.filter.JwtTokenProvider;
 import com.tuhinal.employeemanagement.security.jwt.UserRequest;
 import com.tuhinal.employeemanagement.security.jwt.UserResponse;
 import com.tuhinal.employeemanagement.service.AuthService;
@@ -11,20 +10,28 @@ import com.tuhinal.employeemanagement.util.ApiResponse;
 import com.tuhinal.employeemanagement.util.ApiResponseEntityFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 
+@Slf4j
 @RestController
-@RequestMapping()
+@RequestMapping("/api/auth")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     private final ApiResponseEntityFactory responseFactory;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
 
 
     @PostMapping("/register")
@@ -32,18 +39,24 @@ public class AuthController {
         return responseFactory.saveResponse(authService.register(employeeInfoDto));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/authenticate")
     public ResponseEntity<ApiResponse<UserResponse>> login(@RequestBody UserRequest userRequest) {
-
-        return responseFactory.saveResponse(authService.login(userRequest));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
+        /* SecurityContextHolder is used to allows the rest of the application to know
+        that the user is authenticated and can use user data from Authentication object */
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
+        log.info("Token generated: {}", token);
+        return responseFactory.saveResponse(new UserResponse(token, "Success"));
     }
 
-    @PostMapping("/api/logout")
+    @PostMapping("/logout")
     public ResponseEntity<ApiResponse<UserResponse>> logout(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            jwtUtil.invalidateToken(token);
+//            jwtTokenProvider.invalidateToken(token);
         }
         SecurityContextHolder.clearContext();
         return responseFactory.updateResponse("");

@@ -1,67 +1,72 @@
 package com.tuhinal.employeemanagement.security.config;
 
-import com.tuhinal.employeemanagement.security.filter.JwtTokenValidatorFilter;
-import com.tuhinal.employeemanagement.security.filter.JwtUtil;
+import com.tuhinal.employeemanagement.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class ProjectSecurityConfig {
 
-
-    private final UserDetailsService userDetailsService;
-    private final AuthenticationConfiguration authConfiguration;
-    private final JwtUtil jwtUtil;
+    private final JwtAuthenticationFilter authenticationFilter;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+   /* @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        return builder.build();
+    }*/
+
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        return authConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CsrfTokenRequestAttributeHandler handler = new CsrfTokenRequestAttributeHandler();
-        handler.setCsrfRequestAttributeName("_csrf");
         http
-                .cors(corsCustom -> corsCustom.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+//                .cors(corsCustom -> corsCustom.configurationSource(corsConfigurationSource()))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(req -> req.disable())
-                .authorizeHttpRequests((requests) ->
-                        requests.requestMatchers("/register", "/login").permitAll()
-                                .anyRequest().authenticated())
-                .addFilterBefore(new JwtTokenValidatorFilter(userDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .authenticationProvider(authenticationProvider());
+                .authorizeHttpRequests((request) -> {
+                    request.requestMatchers("/api/auth/**").permitAll();
+                    request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    request.anyRequest().authenticated();
+                });
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(authenticationEntryPoint));
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
 
+/*
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -69,6 +74,7 @@ public class ProjectSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
+*/
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
