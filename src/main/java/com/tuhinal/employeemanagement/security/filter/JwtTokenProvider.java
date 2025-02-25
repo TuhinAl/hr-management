@@ -23,29 +23,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-public class JwtUtil {
+public class JwtTokenProvider {
 
 
-    public static final String jwtSecret = generateSecretKey();
+    private final String jwtSecret = generateSecretKey();
 
     private final Map<String, Long> tokenBlackList = new ConcurrentHashMap<>();
 
-    public String generateJwtToken(Authentication authentication) {
+    public String generateToken(Authentication authentication) {
 
         String username = authentication.getName();
-        String token = "";
+       /* String token = "";
         if (StringUtils.isNotBlank(username)) {
-//            SecretKey secretKey = Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
+            SecretKey secretKey = Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
             token = Jwts.builder()
-                    .setIssuer("Tuhin")
-                    .setSubject(username)
+                    .subject(username)
                     .claim("username", authentication.getName())
                     .claim("authorities", populateAuthorities(authentication.getAuthorities()))
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date((System.currentTimeMillis() + 600000000000L)))
+                    .issuedAt(new Date(System.currentTimeMillis()))
+                    .expiration(new Date((System.currentTimeMillis() + 600000000000L)))
                     .signWith(key(), SignatureAlgorithm.HS256)
                     .compact();
-        }
+        }*/
+        String token = Jwts.builder()
+                .subject(username)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date((System.currentTimeMillis() + 600000000000L)))
+                .signWith(key(), SignatureAlgorithm.HS256)
+                .compact();
+
+
         return token;
     }
 
