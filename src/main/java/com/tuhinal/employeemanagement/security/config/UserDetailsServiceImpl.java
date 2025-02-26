@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.tuhinal.employeemanagement.security.config.UserDetailsImpl.build;
+
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -22,18 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
         EmployeeInfo employeeInfo = employeeInfoRepository.findEmployeeInfoByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
-        Set<GrantedAuthority> authorities = employeeInfo.getRoles().stream()
-                .map((role) -> new SimpleGrantedAuthority(role.getRoleTypeEnumValue()))
-                .collect(Collectors.toSet());
-
-        return new org.springframework.security.core.userdetails.User(
-                username,
-                employeeInfo.getPassword(),
-                authorities
-        );
+        return build(employeeInfo);
     }
 }

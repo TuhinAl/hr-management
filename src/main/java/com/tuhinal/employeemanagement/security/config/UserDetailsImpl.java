@@ -21,6 +21,7 @@ public class UserDetailsImpl implements UserDetails {
     private String id;
     private String username;
     private String email;
+    private Boolean isActive;
     @JsonIgnore
     private String password;
     
@@ -68,7 +69,15 @@ public class UserDetailsImpl implements UserDetails {
     public String getPassword() {
         return password;
     }
-    
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     @Override
     public String getUsername() {
         return username;
