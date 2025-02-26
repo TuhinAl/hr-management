@@ -1,6 +1,7 @@
 package com.tuhinal.employeemanagement.security.config;
 
 import com.tuhinal.employeemanagement.security.filter.JwtAuthenticationFilter;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +18,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
 @Configuration
 //@EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProjectSecurityConfig {
 
     private final JwtAuthenticationFilter authenticationFilter;
@@ -34,13 +36,6 @@ public class ProjectSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-   /* @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        return builder.build();
-    }*/
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -50,12 +45,11 @@ public class ProjectSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-//                .cors(corsCustom -> corsCustom.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((request) -> {
-                    request.requestMatchers("/api/auth/**").permitAll();
-                    request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    request.requestMatchers("/api/auth/register","/api/auth/authenticate").permitAll();
                     request.anyRequest().authenticated();
                 });
         http.exceptionHandling(exception -> exception
@@ -65,27 +59,19 @@ public class ProjectSecurityConfig {
         return http.build();
     }
 
-
-/*
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
-*/
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        return request -> {
+        public CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:4240")); // ✅ Multiple origins if needed
-            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+            configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+            configuration.setExposedHeaders(Arrays.asList("Authorization"));
             configuration.setAllowCredentials(true);
-            configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
             configuration.setMaxAge(3600L);
-            return configuration;
-        };
-    }
+
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", configuration);
+            return source;
+        }
+
 }
