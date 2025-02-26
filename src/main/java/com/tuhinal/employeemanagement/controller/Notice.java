@@ -1,15 +1,24 @@
 package com.tuhinal.employeemanagement.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/api")
 public class Notice {
-    
-    @GetMapping("/notice")
-    public String profile() {
-        return "This is your notice";
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin")
+    public ResponseEntity<String> helloAdmin(){
+        return ResponseEntity.ok("Hello Admin");
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user")
+    public ResponseEntity<String> helloUser(){
+        return ResponseEntity.ok("Hello User");
     }
 }

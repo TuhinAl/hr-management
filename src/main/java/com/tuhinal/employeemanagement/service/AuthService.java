@@ -8,8 +8,7 @@ import com.tuhinal.employeemanagement.enums.RoleTypeEnum;
 import com.tuhinal.employeemanagement.repository.EmployeeInfoRepository;
 import com.tuhinal.employeemanagement.repository.RoleRepository;
 import com.tuhinal.employeemanagement.security.config.UserDetailsImpl;
-import com.tuhinal.employeemanagement.security.config.UserDetailsServiceImpl;
-import com.tuhinal.employeemanagement.security.filter.JwtUtil;
+import com.tuhinal.employeemanagement.security.filter.JwtTokenProvider;
 import com.tuhinal.employeemanagement.security.jwt.UserRequest;
 import com.tuhinal.employeemanagement.security.jwt.UserResponse;
 import com.tuhinal.employeemanagement.util.IdGeneratorService;
@@ -20,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +39,7 @@ public class AuthService {
     private final EmployeeInfoRepository employeeInfoRepository;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     Logger log = LoggerFactory.getLogger(AuthService.class);
 
@@ -76,7 +74,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
         UserDetailsImpl user =  (UserDetailsImpl) authentication.getPrincipal();
 
-        String token = jwtUtil.generateJwtToken(userRequest.getUsername(), authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
         UserResponse userResponse = new UserResponse(user.getId(), token, "Login Successful");
         return userResponse;
     }

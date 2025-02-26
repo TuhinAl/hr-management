@@ -99,7 +99,8 @@ public class EmployeeInfo {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "employee_info_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            inverseJoinColumns = @JoinColumn(name = "role_id"
+                    , referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 
     public EmployeeInfo(String id) {

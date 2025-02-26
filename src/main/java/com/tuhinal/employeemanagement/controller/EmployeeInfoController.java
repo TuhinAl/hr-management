@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,12 +25,14 @@ public class EmployeeInfoController {
     
     private final ApiResponseEntityFactory responseFactory;
     private final EmployeeInfoService employeeInfoService;
-    
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<ApiResponse<EmployeeInfoDto>> save(@RequestBody EmployeeInfoDto employeeInfoDto) {
         return responseFactory.saveResponse(employeeInfoService.save(employeeInfoDto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/search")
     public ResponseEntity<ApiResponse<Page<EmployeeInfoDto>>> search(@RequestBody EmployeeInfoSearchDto employeeInfoSearchDto) {
         return responseFactory.getResponse(employeeInfoService.search(employeeInfoSearchDto));
