@@ -2,6 +2,7 @@ package com.tuhinal.employeemanagement.controller;
 
 
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
+import com.tuhinal.employeemanagement.security.config.UserDetailsImpl;
 import com.tuhinal.employeemanagement.security.filter.JwtTokenProvider;
 import com.tuhinal.employeemanagement.security.jwt.UserRequest;
 import com.tuhinal.employeemanagement.security.jwt.UserResponse;
@@ -46,9 +47,11 @@ public class AuthController {
         /* SecurityContextHolder is used to allows the rest of the application to know
         that the user is authenticated and can use user data from Authentication object */
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String token = jwtTokenProvider.generateToken(authentication);
-        log.info("Token generated: {}", token);
-        return responseFactory.saveResponse(new UserResponse(token, "Success"));
+        UserResponse userResponse = new UserResponse(userDetails.getUsername(), userDetails.getEmail(),
+                userDetails.getId(), token, userDetails.isEnabled(), "Success");
+        return responseFactory.saveResponse(userResponse);
     }
 
     @PostMapping("/logout")

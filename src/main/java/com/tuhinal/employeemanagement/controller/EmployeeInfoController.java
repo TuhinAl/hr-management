@@ -26,13 +26,11 @@ public class EmployeeInfoController {
     private final ApiResponseEntityFactory responseFactory;
     private final EmployeeInfoService employeeInfoService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<ApiResponse<EmployeeInfoDto>> save(@RequestBody EmployeeInfoDto employeeInfoDto) {
         return responseFactory.saveResponse(employeeInfoService.save(employeeInfoDto));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/search")
     public ResponseEntity<ApiResponse<Page<EmployeeInfoDto>>> search(@RequestBody EmployeeInfoSearchDto employeeInfoSearchDto) {
         return responseFactory.getResponse(employeeInfoService.search(employeeInfoSearchDto));
