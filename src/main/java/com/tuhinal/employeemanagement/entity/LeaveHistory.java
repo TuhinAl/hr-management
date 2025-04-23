@@ -83,6 +83,38 @@ public class LeaveHistory {
     @Column(name = "employee_info_id", insertable = false, updatable = false)
     private String employeeInfoId;
 
+    @Column(name = "manager_id")
+    private String managerId;
+
+    @Column(name = "manager_name")
+    private String managerName;
+
+    @Column(name = "manager_approve_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime managerApproveDate;
+
+    @Column(name = "section_head_id")
+    private String sectionHeadId;
+
+    @Column(name = "section_head_name")
+    private String sectionHeadName;
+
+    @Column(name = "section_head_approved_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime sectionHeadApprovedDate;
+
+    @Column(name = "final_approved_id")
+    private String finalApprovedId;
+
+    @Column(name = "final_approved_name")
+    private String finalApprovedName;
+
+    @Column(name = "final_approved_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime finalApprovedDate;
 
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(name = "user_roles",

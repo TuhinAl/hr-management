@@ -1,28 +1,14 @@
 package com.tuhinal.employeemanagement.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tuhinal.employeemanagement.entity.EmployeeInfo;
 import com.tuhinal.employeemanagement.enums.LeaveTypeEnum;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
-
 
 
 @Setter
@@ -57,6 +43,7 @@ public class LeaveDto {
     private EmployeeInfo employeeInfo;
 
     private String employeeInfoId;
+
     public LeaveDto(String id) {
         this.id = id;
     }
