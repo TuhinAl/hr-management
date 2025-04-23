@@ -1,5 +1,6 @@
 package com.tuhinal.employeemanagement.service;
 
+import com.tuhinal.employeemanagement.dto.ApprovedDto;
 import com.tuhinal.employeemanagement.dto.LeaveDto;
 import com.tuhinal.employeemanagement.dto.LeaveHistoryDto;
 import com.tuhinal.employeemanagement.entity.LeaveHistory;
@@ -10,6 +11,8 @@ import com.tuhinal.employeemanagement.repository.LeaveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static com.tuhinal.employeemanagement.util.TransformUtil.copyProp;
 
@@ -30,15 +33,28 @@ public class LeaveHistoryService {
     }
 
     @Transactional
-    public LeaveHistoryDto changeStatus(LeaveHistoryDto leaveHistoryDto) {
-        LeaveHistory leaveHistory = leaveHistoryRepository.findById(leaveHistoryDto.getId()).orElseThrow();
-        if(leaveHistoryDto.getLeaveStatusKey().equals(LeaveStatusEnum.MANAGER_APPROVED)) {
+    public LeaveHistoryDto changeStatus(ApprovedDto approvedDto) {
+        LeaveHistory leaveHistory = leaveHistoryRepository.findById(approvedDto.getId()).orElseThrow();
+        if(approvedDto.getLeaveStatusKey().equals(LeaveStatusEnum.MANAGER_APPROVED)) {
             leaveHistory.setLeaveStatusKey(LeaveStatusEnum.MANAGER_APPROVED);
             leaveHistory.setLeaveStatusValue(LeaveStatusEnum.MANAGER_APPROVED.getValue());
+            leaveHistory.setManagerId(approvedDto.getApprovedById());
+            leaveHistory.setManagerName(approvedDto.getApprovedByName());
+            leaveHistory.setManagerApproveDate(LocalDateTime.now());
         }
-        if(leaveHistoryDto.getLeaveStatusKey().equals(LeaveStatusEnum.HR_APPROVED)) {
+        if(approvedDto.getLeaveStatusKey().equals(LeaveStatusEnum.SECTION_HEAD_APPROVED)) {
+            leaveHistory.setLeaveStatusKey(LeaveStatusEnum.SECTION_HEAD_APPROVED);
+            leaveHistory.setLeaveStatusValue(LeaveStatusEnum.SECTION_HEAD_APPROVED.getValue());
+            leaveHistory.setSectionHeadId(approvedDto.getApprovedById());
+            leaveHistory.setSectionHeadName(approvedDto.getApprovedByName());
+            leaveHistory.setSectionHeadApprovedDate(LocalDateTime.now());
+        }
+        if(approvedDto.getLeaveStatusKey().equals(LeaveStatusEnum.HR_APPROVED)) {
             leaveHistory.setLeaveStatusKey(LeaveStatusEnum.HR_APPROVED);
             leaveHistory.setLeaveStatusValue(LeaveStatusEnum.HR_APPROVED.getValue());
+            leaveHistory.setFinalApprovedId(approvedDto.getApprovedById());
+            leaveHistory.setFinalApprovedName(approvedDto.getApprovedByName());
+            leaveHistory.setFinalApprovedDate(LocalDateTime.now());
             LeaveDto leaveDto = new LeaveDto();
             leaveDto.setEmployeeInfoId(leaveHistory.getEmployeeInfo().getId());
             leaveDto.setNumberOfDaysLeave(leaveHistory.getNumberOfDays());

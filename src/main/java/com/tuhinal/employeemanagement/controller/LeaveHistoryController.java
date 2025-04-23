@@ -1,6 +1,7 @@
 package com.tuhinal.employeemanagement.controller;
 
 
+import com.tuhinal.employeemanagement.dto.ApprovedDto;
 import com.tuhinal.employeemanagement.dto.EmployeeInfoDto;
 import com.tuhinal.employeemanagement.dto.EmployeeInfoSearchDto;
 import com.tuhinal.employeemanagement.dto.LeaveHistoryDto;
@@ -32,8 +33,8 @@ public class LeaveHistoryController {
     }
 
     @PostMapping("/adjust-leave")
-    public ResponseEntity<ApiResponse<LeaveHistoryDto>> search(@RequestBody LeaveHistoryDto leaveHistoryDto) {
-        return responseFactory.getResponse(leaveHistoryService.changeStatus(leaveHistoryDto));
+    public ResponseEntity<ApiResponse<LeaveHistoryDto>> search(@RequestBody ApprovedDto approvedDto) {
+        return responseFactory.getResponse(leaveHistoryService.changeStatus(approvedDto));
     }
     
 }
