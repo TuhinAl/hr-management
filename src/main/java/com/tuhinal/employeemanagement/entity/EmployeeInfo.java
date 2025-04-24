@@ -26,13 +26,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class EmployeeInfo {
-    
+public class EmployeeInfo extends Auditable {
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    
+
     @Column(name = "firstName")
     private String firstName;
 
@@ -50,26 +50,19 @@ public class EmployeeInfo {
 
     @Column(name = "employee_nc_id")
     private String employeeNcId;
-    
+
     @Column(name = "dob")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
-    
+
     @Column(name = "address")
     private String address;
-    
-    @Column(name = "payment_type_enum_key")
-    @Enumerated(EnumType.STRING)
-    private PaymentTypeEnum paymentTypeEnumKey;
-    
-    @Column(name = "payment_type_enum_value")
-    private String paymentTypeEnumValue;
-    
+
     @Column(name = "designation_type_enum_key")
     @Enumerated(EnumType.STRING)
     private DesignationTypeEnum designationTypeEnumKey;
-    
+
     @Column(name = "designation_type_enum_value")
     private String designationTypeEnumValue;
 
@@ -80,18 +73,18 @@ public class EmployeeInfo {
     @Column(name = "role_type_enum_value")
     private String roleTypeEnumValue;
 
-    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employeeInfo", fetch = FetchType.LAZY)
     private List<Leave> leaveList;
 
-    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employeeInfo", fetch = FetchType.LAZY)
     private List<LeaveHistory> leaveHistoryList;
 
-    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employeeInfo", fetch = FetchType.LAZY)
     private List<EmployeeAccountTransaction> employeeAccountTransactionList;
 
-    @OneToMany(mappedBy ="employeeInfo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employeeInfo", fetch = FetchType.LAZY)
     private List<EmployeeAttendance> employeeAttendanceList;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_bank_info_id")
     private EmployeeBankInfo employeeBankInfo;

@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @Builder
 @Accessors(chain = true)
 public class ApprovedDto extends LeaveHistoryDto {
-    private String employeeInfoId;
+	
+	private String employeeInfoId;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime approvedDate;

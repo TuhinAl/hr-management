@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @AllArgsConstructor
 public class EmployeeInfoController {
-    
+
     private final ApiResponseEntityFactory responseFactory;
     private final EmployeeInfoService employeeInfoService;
 
@@ -35,5 +33,5 @@ public class EmployeeInfoController {
     public ResponseEntity<ApiResponse<Page<EmployeeInfoDto>>> search(@RequestBody EmployeeInfoSearchDto employeeInfoSearchDto) {
         return responseFactory.getResponse(employeeInfoService.search(employeeInfoSearchDto));
     }
-    
+
 }
